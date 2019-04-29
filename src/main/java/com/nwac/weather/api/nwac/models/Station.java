@@ -1,13 +1,13 @@
 package com.nwac.weather.api.nwac.models;
 
-import java.util.HashMap;
 import java.util.List;
+import com.nwac.weather.api.nwac.models.TableRow;
 
 public class Station {
   private final String body;
-  private final List<HashMap<String, String>> weather;
+  private final List<TableRow> weather;
 
-  public Station(String body, List<HashMap<String, String>> weather) {
+  public Station(String body, List<TableRow> weather) {
     this.body = body;
     this.weather = weather;
   }
@@ -16,7 +16,7 @@ public class Station {
     return body;
   }
 
-  public List<HashMap<String, String>> getWeather() {
+  public List<TableRow> getWeather() {
     return weather;
   }
 }
