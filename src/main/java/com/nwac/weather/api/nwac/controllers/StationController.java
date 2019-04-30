@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.nwac.weather.api.nwac.models.Station;
 import com.nwac.weather.api.nwac.models.TableRow;
+import com.nwac.weather.api.nwac.models.OSOSTBStation;
 
 @RestController
 @RequestMapping("/api")
@@ -41,19 +42,8 @@ public class StationController {
   @GetMapping("/stations/{id}")
   public Station getStation(@PathVariable(value="id") String stationId) throws IOException {
     String bodyText = "";
-    TableRow tableRow = null;
     List<TableRow> allTableData = new ArrayList<TableRow>();
-    String month = null;
-    String day = null;
-    String hour = null;
-    String temp = null;
-    String relativeHumidity = null;
-    String equipmentTemp = null;
-    String hourPrecipitation = null;
-    String totalPrecipitation = null;
-    String twentyFourHourSnow = null;
-    String totalSnow = null;
-    String barometricPressure = null;
+
     try {
       Document doc = Jsoup.connect("https://data.nwac.us/" + stationId).get();
       Element body = doc.body();
@@ -67,77 +57,177 @@ public class StationController {
       
       System.out.println("StationController->getStation->Headers-> " + headers);
       System.out.println("StationController->getStation->allDataCells-> " + Arrays.toString(allDataCells));
+
+      System.out.println("STATION ID: " + stationId);
+
+      switch (stationId) {
+        case "OSOBLT":
+            allTableData = GetOSOBLT(allDataCells);
+          break;
       
-      Integer counter = 0;
-
-      for (String cell: allDataCells) {
-        counter++;
-        
-        if (counter == 1) {
-          month = cell;
-        }
-
-        if (counter == 2) {
-          day = cell;
-        }
-
-        if (counter == 3) {
-          hour = cell;
-        }
-
-        if (counter == 4) {
-          temp = cell;
-        }
-
-        if (counter == 5) {
-          relativeHumidity = cell;
-        }
-
-        if (counter == 6) {
-          equipmentTemp = cell;
-        }
-
-        if (counter == 7) {
-          hourPrecipitation = cell;
-        }
-
-        if (counter == 8) {
-          totalPrecipitation = cell;
-        }
-
-        if (counter == 9) {
-          twentyFourHourSnow = cell;
-        }
-
-        if (counter == 10) {
-          totalSnow = cell;
-        }
-
-        if (counter == 11) {
-          barometricPressure = cell;
-
-          tableRow = new TableRow(month, day, hour, temp, relativeHumidity, equipmentTemp, hourPrecipitation,
-                                  totalPrecipitation, twentyFourHourSnow, totalSnow, barometricPressure);
-          System.out.println(tableRow); // Using @Override with custom toString() method to print the data
-          allTableData.add(tableRow);
-          counter = 0;
-          tableRow = null;
-          month = null;
-          hour = null;
-          temp = null;
-          relativeHumidity = null;
-          equipmentTemp = null;
-          hourPrecipitation = null;
-          totalPrecipitation = null;
-          twentyFourHourSnow = null;
-          totalSnow = null;
-          barometricPressure = null;
-        }
+        default:
+          break;
       }
+      
       return new Station(data, allTableData);
     } catch (IOException e) {
       e.printStackTrace();
     }
     return new Station(bodyText, allTableData);
+  }
+
+  public List<TableRow> GetOSOBLT(String[] allDataCells) {
+    List<TableRow> allTableData = new ArrayList<TableRow>();
+    TableRow tableRow = null;
+    String month = null;
+    String day = null;
+    String hour = null;
+    String temp = null;
+    String relativeHumidity = null;
+    String equipmentTemp = null;
+    String hourPrecipitation = null;
+    String totalPrecipitation = null;
+    String twentyFourHourSnow = null;
+    String totalSnow = null;
+    String barometricPressure = null;
+    Integer counter = 0;
+
+    for (String cell: allDataCells) {
+      counter++;
+      
+      if (counter == 1) {
+        month = cell;
+      }
+
+      if (counter == 2) {
+        day = cell;
+      }
+
+      if (counter == 3) {
+        hour = cell;
+      }
+
+      if (counter == 4) {
+        temp = cell;
+      }
+
+      if (counter == 5) {
+        relativeHumidity = cell;
+      }
+
+      if (counter == 6) {
+        equipmentTemp = cell;
+      }
+
+      if (counter == 7) {
+        hourPrecipitation = cell;
+      }
+
+      if (counter == 8) {
+        totalPrecipitation = cell;
+      }
+
+      if (counter == 9) {
+        twentyFourHourSnow = cell;
+      }
+
+      if (counter == 10) {
+        totalSnow = cell;
+      }
+
+      if (counter == 11) {
+        barometricPressure = cell;
+
+        tableRow = new TableRow(month, day, hour, temp, relativeHumidity, equipmentTemp, hourPrecipitation,
+                                totalPrecipitation, twentyFourHourSnow, totalSnow, barometricPressure);
+        System.out.println(tableRow); // Using @Override with custom toString() method to print the data
+        allTableData.add(tableRow);
+        counter = 0;
+        tableRow = null;
+        month = null;
+        hour = null;
+        temp = null;
+        relativeHumidity = null;
+        equipmentTemp = null;
+        hourPrecipitation = null;
+        totalPrecipitation = null;
+        twentyFourHourSnow = null;
+        totalSnow = null;
+        barometricPressure = null;
+      }
+    }
+    return allTableData;
+  }
+
+  public List<OSOSTBStation> GetOSOSTB(String[] allDataCells) {
+    List<OSOSTBStation> allTableData = new ArrayList<OSOSTBStation>();
+    OSOSTBStation tableRow = null;
+    String month = null;
+    String day = null;
+    String hour = null;
+    String temp = null;
+    String relativeHumidity = null;
+    String hourPrecipitation = null;
+    String totalPrecipitation = null;
+    String twentyFourHourSnow = null;
+    String totalSnow = null;
+    Integer counter = 0;
+
+    for (String cell : allDataCells) {
+      counter++;
+
+      if (counter == 1) {
+        month = cell;
+      }
+
+      if (counter == 2) {
+        day = cell;
+      }
+
+      if (counter == 3) {
+        hour = cell;
+      }
+
+      if (counter == 4) {
+        temp = cell;
+      }
+
+      if (counter == 5) {
+        relativeHumidity = cell;
+      }
+
+      if (counter == 6) {
+        hourPrecipitation = cell;
+      }
+
+      if (counter == 7) {
+        totalPrecipitation = cell;
+      }
+
+      if (counter == 8) {
+        twentyFourHourSnow = cell;
+      }
+
+      if (counter == 9) {
+        totalSnow = cell;
+        
+
+        tableRow = new OSOSTBStation(month, day, hour, temp, relativeHumidity, hourPrecipitation,
+            totalPrecipitation, twentyFourHourSnow, totalSnow);
+        System.out.println(tableRow); // Using @Override with custom toString() method to print the data
+        allTableData.add(tableRow);
+        counter = 0;
+        tableRow = null;
+        month = null;
+        hour = null;
+        temp = null;
+        relativeHumidity = null;
+        hourPrecipitation = null;
+        totalPrecipitation = null;
+        twentyFourHourSnow = null;
+        totalSnow = null;
+      }
+    }
+    return allTableData;
   }
 }
