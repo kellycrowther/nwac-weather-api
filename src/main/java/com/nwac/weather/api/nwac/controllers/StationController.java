@@ -25,25 +25,25 @@ public class StationController {
   @GetMapping("/stations")
   public Station getAllStations() throws IOException {
     String bodyText = new String();
-    List<OSOBLTStation> allTableData = new ArrayList<OSOBLTStation>();
+    List<OSOBLTStation> osobltStation = new ArrayList<OSOBLTStation>();
 
     try {
       Document doc = Jsoup.connect("https://data.nwac.us/ALL").get();
       Element body = doc.body();
       bodyText = body.text();
       System.out.println(doc.body());
-      return new Station(bodyText, allTableData);
+      return new Station();
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return new Station(bodyText, allTableData);
+    return new Station();
   }
 
   @GetMapping("/stations/{id}")
   public Station getStation(@PathVariable(value="id") String stationId) throws IOException {
     Station station;
     String bodyText = "";
-    List<OSOBLTStation> allTableData = new ArrayList<OSOBLTStation>();
+    List<OSOBLTStation> osobltStation = new ArrayList<OSOBLTStation>();
     List<OSOSTBStation> osostbStation = new ArrayList<OSOSTBStation>();
 
     try {
@@ -64,16 +64,16 @@ public class StationController {
 
       switch (stationId) {
         case "OSOBLT":
-            allTableData = GetOSOBLT(allDataCells);
-            station = new Station(data, allTableData);
+            osobltStation = GetOSOBLT(allDataCells);
+            station = new Station().withOsobltStation(data, osobltStation).build();
           break;
         case "OSOSTB":
             osostbStation = GetOSOSTB(allDataCells);
-            station = new Station(data, allTableData).withOsostbStation(osostbStation).build();
+            station = new Station().withOsostbStation(data, osostbStation).build();
           break;
       
         default:
-          station = new Station(data, allTableData);
+          station = new Station();
           break;
       }
 
@@ -81,7 +81,7 @@ public class StationController {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return new Station(bodyText, allTableData);
+    return new Station();
   }
 
   public List<OSOBLTStation> GetOSOBLT(String[] allDataCells) {
