@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.nwac.weather.api.nwac.models.Station;
-import com.nwac.weather.api.nwac.models.TableRow;
+import com.nwac.weather.api.nwac.models.OSOBLTStation;
 import com.nwac.weather.api.nwac.models.OSOSTBStation;
 
 @RestController
@@ -25,7 +25,7 @@ public class StationController {
   @GetMapping("/stations")
   public Station getAllStations() throws IOException {
     String bodyText = new String();
-    List<TableRow> allTableData = new ArrayList<TableRow>();
+    List<OSOBLTStation> allTableData = new ArrayList<OSOBLTStation>();
 
     try {
       Document doc = Jsoup.connect("https://data.nwac.us/ALL").get();
@@ -43,7 +43,7 @@ public class StationController {
   public Station getStation(@PathVariable(value="id") String stationId) throws IOException {
     Station station;
     String bodyText = "";
-    List<TableRow> allTableData = new ArrayList<TableRow>();
+    List<OSOBLTStation> allTableData = new ArrayList<OSOBLTStation>();
     List<OSOSTBStation> osostbStation = new ArrayList<OSOSTBStation>();
 
     try {
@@ -84,9 +84,9 @@ public class StationController {
     return new Station(bodyText, allTableData);
   }
 
-  public List<TableRow> GetOSOBLT(String[] allDataCells) {
-    List<TableRow> allTableData = new ArrayList<TableRow>();
-    TableRow tableRow = null;
+  public List<OSOBLTStation> GetOSOBLT(String[] allDataCells) {
+    List<OSOBLTStation> allTableData = new ArrayList<OSOBLTStation>();
+    OSOBLTStation tableRow = null;
     String month = null;
     String day = null;
     String hour = null;
@@ -146,7 +146,7 @@ public class StationController {
       if (counter == 11) {
         barometricPressure = cell;
 
-        tableRow = new TableRow(month, day, hour, temp, relativeHumidity, equipmentTemp, hourPrecipitation,
+        tableRow = new OSOBLTStation(month, day, hour, temp, relativeHumidity, equipmentTemp, hourPrecipitation,
                                 totalPrecipitation, twentyFourHourSnow, totalSnow, barometricPressure);
         System.out.println(tableRow); // Using @Override with custom toString() method to print the data
         allTableData.add(tableRow);

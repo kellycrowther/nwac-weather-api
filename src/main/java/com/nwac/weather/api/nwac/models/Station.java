@@ -1,21 +1,21 @@
 package com.nwac.weather.api.nwac.models;
 
 import java.util.List;
-import com.nwac.weather.api.nwac.models.TableRow;
+import com.nwac.weather.api.nwac.models.OSOBLTStation;
 
 public class Station {
   private final String body;
-  private final List<TableRow> weather;
+  private final List<OSOBLTStation> osobltStation;
   private List<OSOSTBStation> osostbStation;
 
-  public Station(String body, List<TableRow> weather) {
+  public Station(String body, List<OSOBLTStation> osobltStation) {
     this.body = body;
-    this.weather = weather;
+    this.osobltStation = osobltStation;
   }
 
   public Station(Station station) {
     this.body = station.body;
-    this.weather = station.weather;
+    this.osobltStation = station.osobltStation;
     this.osostbStation = station.osostbStation;
   }
 
@@ -23,8 +23,8 @@ public class Station {
     return body;
   }
 
-  public List<TableRow> getWeather() {
-    return weather;
+  public List<OSOBLTStation> getOSOBLT() {
+    return osobltStation;
   }
 
   public List<OSOSTBStation> getOSOSTBStation() {

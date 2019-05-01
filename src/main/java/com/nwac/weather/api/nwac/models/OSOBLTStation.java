@@ -1,6 +1,6 @@
 package com.nwac.weather.api.nwac.models;
 
-public class TableRow {
+public class OSOBLTStation {
   private final String month;
   private final String day;
   private final String hour;
@@ -14,7 +14,7 @@ public class TableRow {
   private final String barometricPressure;
 
 
-  public TableRow(String month, String day, String hour, String temp, String relativeHumidity, String equipmentTemp, String hourPrecipitation, String totalPrecipitation, String twentyFourHourSnow, String totalSnow, String barometricPressure) {
+  public OSOBLTStation(String month, String day, String hour, String temp, String relativeHumidity, String equipmentTemp, String hourPrecipitation, String totalPrecipitation, String twentyFourHourSnow, String totalSnow, String barometricPressure) {
     this.month = month;
     this.day = day;
     this.hour = hour;
