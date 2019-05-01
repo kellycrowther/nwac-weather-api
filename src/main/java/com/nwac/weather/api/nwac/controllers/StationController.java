@@ -41,8 +41,10 @@ public class StationController {
 
   @GetMapping("/stations/{id}")
   public Station getStation(@PathVariable(value="id") String stationId) throws IOException {
+    Station station;
     String bodyText = "";
     List<TableRow> allTableData = new ArrayList<TableRow>();
+    List<OSOSTBStation> osostbStation = new ArrayList<OSOSTBStation>();
 
     try {
       Document doc = Jsoup.connect("https://data.nwac.us/" + stationId).get();
@@ -63,13 +65,19 @@ public class StationController {
       switch (stationId) {
         case "OSOBLT":
             allTableData = GetOSOBLT(allDataCells);
+            station = new Station(data, allTableData);
+          break;
+        case "OSOSTB":
+            osostbStation = GetOSOSTB(allDataCells);
+            station = new Station(data, allTableData).withOsostbStation(osostbStation).build();
           break;
       
         default:
+          station = new Station(data, allTableData);
           break;
       }
-      
-      return new Station(data, allTableData);
+
+      return station;
     } catch (IOException e) {
       e.printStackTrace();
     }
