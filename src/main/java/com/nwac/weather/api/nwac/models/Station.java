@@ -1,13 +1,12 @@
 package com.nwac.weather.api.nwac.models;
-
 import java.util.List;
-import com.nwac.weather.api.nwac.models.OSOBLTStation;
 
 public class Station {
   private final String body = "This is the single station API endpoint. It will return an object based on the stations data. The objects for each station are different depending on what data the station provides";
   private String rawData;
   private List<OSOBLTStation> osobltStation;
   private List<OSOSTBStation> osostbStation;
+  private List<OSODIRStation> osodirStation;
 
   public Station() {
   }
@@ -16,6 +15,7 @@ public class Station {
     this.rawData = station.rawData;
     this.osobltStation = station.osobltStation;
     this.osostbStation = station.osostbStation;
+    this.osodirStation = station.osodirStation;
   }
 
   public String getBody() {
@@ -34,6 +34,10 @@ public class Station {
     return osostbStation;
   }
 
+  public List<OSODIRStation> getOSODIRStation() {
+    return osodirStation;
+  }
+
   public Station withOsobltStation(String rawData, List<OSOBLTStation> osobltStation) {
     this.rawData = rawData;
     this.osobltStation = osobltStation;
@@ -43,6 +47,12 @@ public class Station {
   public Station withOsostbStation(String rawData, List<OSOSTBStation> osostbStation) {
     this.rawData = rawData;
     this.osostbStation = osostbStation;
+    return this;
+  }
+
+  public Station withOsodirStation(String rawData, List<OSODIRStation> osodirStation) {
+    this.rawData = rawData;
+    this.osodirStation = osodirStation;
     return this;
   }
 

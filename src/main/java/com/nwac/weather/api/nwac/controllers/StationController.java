@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.nwac.weather.api.nwac.models.Station;
 import com.nwac.weather.api.nwac.models.OSOBLTStation;
+import com.nwac.weather.api.nwac.models.OSODIRStation;
 import com.nwac.weather.api.nwac.models.OSOSTBStation;
 
 @RestController
@@ -45,6 +46,7 @@ public class StationController {
     String bodyText = "";
     List<OSOBLTStation> osobltStation = new ArrayList<OSOBLTStation>();
     List<OSOSTBStation> osostbStation = new ArrayList<OSOSTBStation>();
+    List<OSODIRStation> osodirStation = new ArrayList<OSODIRStation>();
 
     try {
       Document doc = Jsoup.connect("https://data.nwac.us/" + stationId).get();
@@ -52,7 +54,13 @@ public class StationController {
       bodyText = body.text();
       Integer dateHeaderIndex = bodyText.indexOf("MM");
       Integer finalHeaderIndex = bodyText.indexOf("-----");
-      Integer finalDataIndex = bodyText.lastIndexOf("Total");
+      Integer finalDataIndex;
+      if (bodyText.lastIndexOf("Total") != -1) {
+        finalDataIndex = bodyText.lastIndexOf("Total");
+      } else {
+        finalDataIndex = bodyText.lastIndexOf("Page");
+      }
+      
       String headers = bodyText.substring(dateHeaderIndex, finalHeaderIndex);
       String data = bodyText.substring(finalHeaderIndex, finalDataIndex).replace("--", " ").trim();
       String[] allDataCells = data.split(" ");
@@ -71,6 +79,10 @@ public class StationController {
             osostbStation = GetOSOSTB(allDataCells);
             station = new Station().withOsostbStation(data, osostbStation).build();
           break;
+        case "OSODIR":
+            osodirStation = GetOSODIR(allDataCells);
+            station = new Station().withOsodirStation(data, osodirStation).build();
+        break;
       
         default:
           station = new Station();
@@ -234,6 +246,77 @@ public class StationController {
         totalPrecipitation = null;
         twentyFourHourSnow = null;
         totalSnow = null;
+      }
+    }
+    return allTableData;
+  }
+
+  public List<OSODIRStation> GetOSODIR(String[] allDataCells) {
+    List<OSODIRStation> allTableData = new ArrayList<OSODIRStation>();
+    OSODIRStation tableRow = null;
+    String month = null;
+    String day = null;
+    String hour = null;
+    String temp = null;
+    String relativeHumidity = null;
+    String minWind = null;
+    String avgWind = null;
+    String maxWind = null;
+    String directionWind = null;
+    Integer counter = 0;
+
+    for (String cell : allDataCells) {
+      counter++;
+
+      if (counter == 1) {
+        month = cell;
+      }
+
+      if (counter == 2) {
+        day = cell;
+      }
+
+      if (counter == 3) {
+        hour = cell;
+      }
+
+      if (counter == 4) {
+        temp = cell;
+      }
+
+      if (counter == 5) {
+        relativeHumidity = cell;
+      }
+
+      if (counter == 6) {
+        minWind = cell;
+      }
+
+      if (counter == 7) {
+        avgWind = cell;
+      }
+
+      if (counter == 8) {
+        maxWind = cell;
+      }
+
+      if (counter == 9) {
+        directionWind = cell;
+
+        tableRow = new OSODIRStation(month, day, hour, temp, relativeHumidity, minWind, avgWind,
+            maxWind, directionWind);
+        System.out.println(tableRow); // Using @Override with custom toString() method to print the data
+        allTableData.add(tableRow);
+        counter = 0;
+        tableRow = null;
+        month = null;
+        hour = null;
+        temp = null;
+        relativeHumidity = null;
+        minWind = null;
+        avgWind = null;
+        maxWind = null;
+        directionWind = null;
       }
     }
     return allTableData;
